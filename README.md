@@ -28,7 +28,7 @@ The following option allow you to disable that masking for debugging purposes:
 * `silent`: (Optional; default: _true_) If set to _false_ the  action will
   not mask or suppress the command or outputs from the logs or console.
 
-_Oracle recommends you only disale this option for debugging purposes._
+_Oracle recommends you only disable this option for debugging purposes._
 
 ## Outputs
 
