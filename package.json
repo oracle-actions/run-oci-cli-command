@@ -36,21 +36,21 @@
   },
   "homepage": "https://github.com/oracle-actions/run-oci-cli-command#readme",
   "dependencies": {
-    "@actions/core": "^1.5.0",
+    "@actions/core": "^1.6.0",
     "@actions/exec": "^1.1.0",
     "@actions/io": "^1.1.1",
     "@actions/tool-cache": "^1.7.1",
-    "oci-common": "^2.2.0"
+    "oci-common": "^2.5.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^13.1.0",
-    "@commitlint/config-conventional": "^13.1.0",
-    "@types/node": "^16.7.1",
-    "@vercel/ncc": "^0.29.2",
-    "cz-conventional-changelog": "^3.3.0",
-    "husky": "^7.0.1",
-    "prettier": "^2.3.2",
-    "typescript": "^4.3.5"
+    "@commitlint/cli": "^13.2.0",
+    "@commitlint/config-conventional": "^13.2.0",
+    "@types/node": "^16.10.3",
+    "@vercel/ncc": "^0.31.1",
+    "cz-conventional-changelog": "^3.0.1",
+    "husky": "^7.0.2",
+    "prettier": "^2.4.1",
+    "typescript": "^4.4.3"
   },
   "config": {
     "commitizen": {
