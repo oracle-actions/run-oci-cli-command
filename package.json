@@ -39,8 +39,7 @@
     "@actions/core": "^1.6.0",
     "@actions/exec": "^1.1.0",
     "@actions/io": "^1.1.1",
-    "@actions/tool-cache": "^1.7.1",
-    "oci-common": "^2.5.0"
+    "@actions/tool-cache": "^1.7.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^13.2.0",
