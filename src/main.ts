@@ -7,8 +7,6 @@ import * as core from '@actions/core';
 import * as io from '@actions/io';
 import * as exec from '@actions/exec';
 
-import common = require('oci-common');
-
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
@@ -21,10 +19,6 @@ import * as path from 'path';
  *
  */
 async function runOciCliCommand(): Promise<void> {
-  const configProvider = new common.ConfigFileAuthenticationDetailsProvider(
-    process.env.OCI_CLI_CONFIG_FILE
-  );
-
   if (!fs.existsSync(path.join(os.homedir(), '.oci-cli-installed'))) {
     core.startGroup('Installing Oracle Cloud Infrastructure CLI');
     const cli = await exec.getExecOutput('python -m pip install oci-cli');
@@ -82,8 +76,7 @@ async function runOciCliCommand(): Promise<void> {
 }
 
 /**
- * If OCI_CLI_CONFIG_FILE isn't set, this will immediately throw an Error
- * and fail the workflow step.
+ * Requires OCI CLI environment variables to be set
  */
 runOciCliCommand().catch(e => {
   if (e instanceof Error) core.setFailed(e.message);
