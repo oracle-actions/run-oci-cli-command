@@ -1,0 +1,40 @@
+name: Test the run-oci-cli-command action
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  get-running-instances:
+    runs-on: ubuntu-latest
+    name: Use the run-oci-cli-command to retrieve a list of running instances
+    env:
+      OCI_CLI_USER: ${{ secrets.OCI_CLI_USER }}
+      OCI_CLI_TENANCY: ${{ secrets.OCI_CLI_TENANCY }}
+      OCI_CLI_FINGERPRINT: ${{ secrets.OCI_CLI_FINGERPRINT }}
+      OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
+      OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Retrieve the OCID of a named compartment in tenancy
+        uses: ./run-oci-cli-command/
+        id: find-compartment-id
+        with:
+          command: 'iam compartment list --compartment-id-in-subtree=true'
+          query: "data[?name=='${{ secrets.OCI_COMPARTMENT_NAME }}'].id"
+
+      - name: Find instances in the named compartment
+        uses: ./run-oci-cli-command/
+        id: find-instances
+        with:
+          command: 'compute instance list --compartment-id ${{ steps.find-compartment-id.outputs.raw_output }}'
+          query: 'data[*].{name: \"display-name\", shape: shape}'
+
+      - name: List the found instances
+        run: echo ${{ steps.find-instances.outputs.output }} | jq .
