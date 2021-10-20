@@ -16,15 +16,9 @@ inputs:
       JSON before output.
     required: false
     default: ''
-  region:
-    description: >-
-      (Optional) The region against which to make calls. Defaults to the region
-      specified in the oracle-actions/configure-oci-credentials.
-    required: false
-    default: ''
   silent:
     description: >-
-      (Default: false) If set to False, will stream the output of the command
+      (Default: true) If set to 'False', will stream the output of the command
       directly to the log. This may leak confidential information. We
       recomment keep this as false except for debugging purposes.
     required: false
