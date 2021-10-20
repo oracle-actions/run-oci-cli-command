@@ -40,14 +40,10 @@ async function runOciCliCommand(): Promise<void> {
   const jmesPath = core.getInput('query')
     ? `--query "${core.getInput('query').trim()}"`
     : '';
-  const ociRegion = core.getInput('region')
-    ? `--region "${core.getInput('region').trim()}"`
-    : '';
-
   core.info('Executing Oracle Cloud Infrastructure CLI command');
   const silent = core.getBooleanInput('silent', {required: false});
 
-  const cliCommand = `${cliBin} ${ociRegion} ${jmesPath} ${cliArgs}`;
+  const cliCommand = `${cliBin} ${jmesPath} ${cliArgs}`;
   if (silent) core.setSecret(cliCommand);
 
   const cliResult = await exec.getExecOutput(cliCommand, [], {silent: silent});
