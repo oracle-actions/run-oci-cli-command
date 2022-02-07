@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
-    "outDir": "./lib",
+    "target": "es2015",
+    "moduleResolution": "node",
+    "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "esModuleInterop": true
   },
-  "exclude": ["node_modules", "configure-oci-credentials"]
+  "exclude": ["node_modules"]
 }

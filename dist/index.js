@@ -1,120 +1,7 @@
-require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 109:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-/**
- * Copyright (c) 2021, Oracle and/or its affiliates.
- * Licensed under the Universal Permissive License v1.0 as shown at https://oss.oracle.com/licenses/upl.
- */
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core = __importStar(__nccwpck_require__(186));
-const io = __importStar(__nccwpck_require__(436));
-const exec = __importStar(__nccwpck_require__(514));
-const fs = __importStar(__nccwpck_require__(747));
-const os = __importStar(__nccwpck_require__(87));
-const path = __importStar(__nccwpck_require__(622));
-/**
- * Install the OCI CLI (if ncessary) and then run the command specified by
- * the user workflow. By default, the action suppresses/masks the command
- * and output from the GitHub console and logs to avoid leaking confidential
- * data.
- *
- */
-function runOciCliCommand() {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (!fs.existsSync(path.join(os.homedir(), '.oci-cli-installed'))) {
-            core.startGroup('Installing Oracle Cloud Infrastructure CLI');
-            const cli = yield exec.getExecOutput('python -m pip install oci-cli');
-            if (cli && cli.exitCode == 0) {
-                fs.writeFileSync(path.join(os.homedir(), '.oci-cli-installed'), 'success');
-            }
-            core.endGroup();
-        }
-        const cliBin = yield io.which('oci', true);
-        const cliArgs = core
-            .getInput('command', { required: true })
-            .replace(/^(oci\s)/, '')
-            .trim();
-        const jmesPath = core.getInput('query')
-            ? `--query "${core.getInput('query').trim()}"`
-            : '';
-        const ociRegion = core.getInput('region')
-            ? `--region "${core.getInput('region').trim()}"`
-            : '';
-        core.info('Executing Oracle Cloud Infrastructure CLI command');
-        const silent = core.getBooleanInput('silent', { required: false });
-        const cliCommand = `${cliBin} ${ociRegion} ${jmesPath} ${cliArgs}`;
-        if (silent)
-            core.setSecret(cliCommand);
-        const cliResult = yield exec.getExecOutput(cliCommand, [], { silent: silent });
-        if (cliResult) {
-            const stdout = cliResult.stdout ? JSON.parse(cliResult.stdout) : {};
-            const stderr = cliResult.stderr ? JSON.stringify(cliResult.stderr) : '';
-            if (cliResult.exitCode == 0) {
-                const output = JSON.stringify(JSON.stringify(stdout));
-                if (silent && output)
-                    core.setSecret(output);
-                core.setOutput('output', output);
-                if (Object.keys(stdout).length == 1) {
-                    const raw_output = stdout[0];
-                    if (silent && raw_output)
-                        core.setSecret(raw_output);
-                    core.setOutput('raw_output', raw_output);
-                }
-            }
-            else {
-                core.setFailed(`Failed: ${JSON.stringify(stderr)}`);
-            }
-        }
-        else {
-            core.setFailed('Failed to execute OCI CLI command.');
-        }
-    });
-}
-/**
- * Requires OCI CLI environment variables to be set
- */
-runOciCliCommand().catch(e => {
-    if (e instanceof Error)
-        core.setFailed(e.message);
-});
-
-
-/***/ }),
-
-/***/ 351:
+/***/ 273:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -140,8 +27,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.issue = exports.issueCommand = void 0;
-const os = __importStar(__nccwpck_require__(87));
-const utils_1 = __nccwpck_require__(278);
+const os = __importStar(__nccwpck_require__(37));
+const utils_1 = __nccwpck_require__(108);
 /**
  * Commands
  *
@@ -213,7 +100,7 @@ function escapeProperty(s) {
 
 /***/ }),
 
-/***/ 186:
+/***/ 438:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -248,12 +135,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getIDToken = exports.getState = exports.saveState = exports.group = exports.endGroup = exports.startGroup = exports.info = exports.notice = exports.warning = exports.error = exports.debug = exports.isDebug = exports.setFailed = exports.setCommandEcho = exports.setOutput = exports.getBooleanInput = exports.getMultilineInput = exports.getInput = exports.addPath = exports.setSecret = exports.exportVariable = exports.ExitCode = void 0;
-const command_1 = __nccwpck_require__(351);
-const file_command_1 = __nccwpck_require__(717);
-const utils_1 = __nccwpck_require__(278);
-const os = __importStar(__nccwpck_require__(87));
-const path = __importStar(__nccwpck_require__(622));
-const oidc_utils_1 = __nccwpck_require__(41);
+const command_1 = __nccwpck_require__(273);
+const file_command_1 = __nccwpck_require__(921);
+const utils_1 = __nccwpck_require__(108);
+const os = __importStar(__nccwpck_require__(37));
+const path = __importStar(__nccwpck_require__(17));
+const oidc_utils_1 = __nccwpck_require__(267);
 /**
  * The code to exit an action
  */
@@ -532,7 +419,7 @@ exports.getIDToken = getIDToken;
 
 /***/ }),
 
-/***/ 717:
+/***/ 921:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -561,9 +448,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.issueCommand = void 0;
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const fs = __importStar(__nccwpck_require__(747));
-const os = __importStar(__nccwpck_require__(87));
-const utils_1 = __nccwpck_require__(278);
+const fs = __importStar(__nccwpck_require__(147));
+const os = __importStar(__nccwpck_require__(37));
+const utils_1 = __nccwpck_require__(108);
 function issueCommand(command, message) {
     const filePath = process.env[`GITHUB_${command}`];
     if (!filePath) {
@@ -581,7 +468,7 @@ exports.issueCommand = issueCommand;
 
 /***/ }),
 
-/***/ 41:
+/***/ 267:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -597,9 +484,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OidcClient = void 0;
-const http_client_1 = __nccwpck_require__(925);
-const auth_1 = __nccwpck_require__(702);
-const core_1 = __nccwpck_require__(186);
+const http_client_1 = __nccwpck_require__(217);
+const auth_1 = __nccwpck_require__(176);
+const core_1 = __nccwpck_require__(438);
 class OidcClient {
     static createHttpClient(allowRetry = true, maxRetry = 10) {
         const requestOptions = {
@@ -665,7 +552,7 @@ exports.OidcClient = OidcClient;
 
 /***/ }),
 
-/***/ 278:
+/***/ 108:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -712,7 +599,7 @@ exports.toCommandProperties = toCommandProperties;
 
 /***/ }),
 
-/***/ 514:
+/***/ 313:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -747,8 +634,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getExecOutput = exports.exec = void 0;
-const string_decoder_1 = __nccwpck_require__(304);
-const tr = __importStar(__nccwpck_require__(159));
+const string_decoder_1 = __nccwpck_require__(576);
+const tr = __importStar(__nccwpck_require__(957));
 /**
  * Exec a command.
  * Output will be streamed to the live console.
@@ -822,7 +709,7 @@ exports.getExecOutput = getExecOutput;
 
 /***/ }),
 
-/***/ 159:
+/***/ 957:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -857,13 +744,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.argStringToArray = exports.ToolRunner = void 0;
-const os = __importStar(__nccwpck_require__(87));
-const events = __importStar(__nccwpck_require__(614));
-const child = __importStar(__nccwpck_require__(129));
-const path = __importStar(__nccwpck_require__(622));
-const io = __importStar(__nccwpck_require__(436));
-const ioUtil = __importStar(__nccwpck_require__(962));
-const timers_1 = __nccwpck_require__(213);
+const os = __importStar(__nccwpck_require__(37));
+const events = __importStar(__nccwpck_require__(361));
+const child = __importStar(__nccwpck_require__(81));
+const path = __importStar(__nccwpck_require__(17));
+const io = __importStar(__nccwpck_require__(657));
+const ioUtil = __importStar(__nccwpck_require__(414));
+const timers_1 = __nccwpck_require__(512);
 /* eslint-disable @typescript-eslint/unbound-method */
 const IS_WINDOWS = process.platform === 'win32';
 /*
@@ -1447,7 +1334,7 @@ class ExecState extends events.EventEmitter {
 
 /***/ }),
 
-/***/ 702:
+/***/ 176:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -1513,15 +1400,15 @@ exports.PersonalAccessTokenCredentialHandler = PersonalAccessTokenCredentialHand
 
 /***/ }),
 
-/***/ 925:
+/***/ 217:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const http = __nccwpck_require__(605);
-const https = __nccwpck_require__(211);
-const pm = __nccwpck_require__(443);
+const http = __nccwpck_require__(685);
+const https = __nccwpck_require__(687);
+const pm = __nccwpck_require__(610);
 let tunnel;
 var HttpCodes;
 (function (HttpCodes) {
@@ -1940,7 +1827,7 @@ class HttpClient {
         if (useProxy) {
             // If using proxy, need tunnel
             if (!tunnel) {
-                tunnel = __nccwpck_require__(294);
+                tunnel = __nccwpck_require__(526);
             }
             const agentOptions = {
                 maxSockets: maxSockets,
@@ -2058,7 +1945,7 @@ exports.HttpClient = HttpClient;
 
 /***/ }),
 
-/***/ 443:
+/***/ 610:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -2123,7 +2010,7 @@ exports.checkBypass = checkBypass;
 
 /***/ }),
 
-/***/ 962:
+/***/ 414:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -2159,8 +2046,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getCmdPath = exports.tryGetExecutablePath = exports.isRooted = exports.isDirectory = exports.exists = exports.IS_WINDOWS = exports.unlink = exports.symlink = exports.stat = exports.rmdir = exports.rename = exports.readlink = exports.readdir = exports.mkdir = exports.lstat = exports.copyFile = exports.chmod = void 0;
-const fs = __importStar(__nccwpck_require__(747));
-const path = __importStar(__nccwpck_require__(622));
+const fs = __importStar(__nccwpck_require__(147));
+const path = __importStar(__nccwpck_require__(17));
 _a = fs.promises, exports.chmod = _a.chmod, exports.copyFile = _a.copyFile, exports.lstat = _a.lstat, exports.mkdir = _a.mkdir, exports.readdir = _a.readdir, exports.readlink = _a.readlink, exports.rename = _a.rename, exports.rmdir = _a.rmdir, exports.stat = _a.stat, exports.symlink = _a.symlink, exports.unlink = _a.unlink;
 exports.IS_WINDOWS = process.platform === 'win32';
 function exists(fsPath) {
@@ -2307,7 +2194,7 @@ exports.getCmdPath = getCmdPath;
 
 /***/ }),
 
-/***/ 436:
+/***/ 657:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -2342,11 +2229,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.findInPath = exports.which = exports.mkdirP = exports.rmRF = exports.mv = exports.cp = void 0;
-const assert_1 = __nccwpck_require__(357);
-const childProcess = __importStar(__nccwpck_require__(129));
-const path = __importStar(__nccwpck_require__(622));
-const util_1 = __nccwpck_require__(669);
-const ioUtil = __importStar(__nccwpck_require__(962));
+const assert_1 = __nccwpck_require__(491);
+const childProcess = __importStar(__nccwpck_require__(81));
+const path = __importStar(__nccwpck_require__(17));
+const util_1 = __nccwpck_require__(837);
+const ioUtil = __importStar(__nccwpck_require__(414));
 const exec = util_1.promisify(childProcess.exec);
 const execFile = util_1.promisify(childProcess.execFile);
 /**
@@ -2655,27 +2542,27 @@ function copyFile(srcFile, destFile, force) {
 
 /***/ }),
 
-/***/ 294:
+/***/ 526:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-module.exports = __nccwpck_require__(219);
+module.exports = __nccwpck_require__(211);
 
 
 /***/ }),
 
-/***/ 219:
+/***/ 211:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 
-var net = __nccwpck_require__(631);
-var tls = __nccwpck_require__(16);
-var http = __nccwpck_require__(605);
-var https = __nccwpck_require__(211);
-var events = __nccwpck_require__(614);
-var assert = __nccwpck_require__(357);
-var util = __nccwpck_require__(669);
+var net = __nccwpck_require__(808);
+var tls = __nccwpck_require__(404);
+var http = __nccwpck_require__(685);
+var https = __nccwpck_require__(687);
+var events = __nccwpck_require__(361);
+var assert = __nccwpck_require__(491);
+var util = __nccwpck_require__(837);
 
 
 exports.httpOverHttp = httpOverHttp;
@@ -2935,7 +2822,7 @@ exports.debug = debug; // for test
 
 /***/ }),
 
-/***/ 357:
+/***/ 491:
 /***/ ((module) => {
 
 "use strict";
@@ -2943,7 +2830,7 @@ module.exports = require("assert");
 
 /***/ }),
 
-/***/ 129:
+/***/ 81:
 /***/ ((module) => {
 
 "use strict";
@@ -2951,7 +2838,7 @@ module.exports = require("child_process");
 
 /***/ }),
 
-/***/ 614:
+/***/ 361:
 /***/ ((module) => {
 
 "use strict";
@@ -2959,7 +2846,7 @@ module.exports = require("events");
 
 /***/ }),
 
-/***/ 747:
+/***/ 147:
 /***/ ((module) => {
 
 "use strict";
@@ -2967,7 +2854,7 @@ module.exports = require("fs");
 
 /***/ }),
 
-/***/ 605:
+/***/ 685:
 /***/ ((module) => {
 
 "use strict";
@@ -2975,7 +2862,7 @@ module.exports = require("http");
 
 /***/ }),
 
-/***/ 211:
+/***/ 687:
 /***/ ((module) => {
 
 "use strict";
@@ -2983,7 +2870,7 @@ module.exports = require("https");
 
 /***/ }),
 
-/***/ 631:
+/***/ 808:
 /***/ ((module) => {
 
 "use strict";
@@ -2991,7 +2878,7 @@ module.exports = require("net");
 
 /***/ }),
 
-/***/ 87:
+/***/ 37:
 /***/ ((module) => {
 
 "use strict";
@@ -2999,7 +2886,7 @@ module.exports = require("os");
 
 /***/ }),
 
-/***/ 622:
+/***/ 17:
 /***/ ((module) => {
 
 "use strict";
@@ -3007,7 +2894,7 @@ module.exports = require("path");
 
 /***/ }),
 
-/***/ 304:
+/***/ 576:
 /***/ ((module) => {
 
 "use strict";
@@ -3015,7 +2902,7 @@ module.exports = require("string_decoder");
 
 /***/ }),
 
-/***/ 213:
+/***/ 512:
 /***/ ((module) => {
 
 "use strict";
@@ -3023,7 +2910,7 @@ module.exports = require("timers");
 
 /***/ }),
 
-/***/ 16:
+/***/ 404:
 /***/ ((module) => {
 
 "use strict";
@@ -3031,7 +2918,7 @@ module.exports = require("tls");
 
 /***/ }),
 
-/***/ 669:
+/***/ 837:
 /***/ ((module) => {
 
 "use strict";
@@ -3072,18 +2959,151 @@ module.exports = require("util");
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__nccwpck_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__nccwpck_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__nccwpck_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__nccwpck_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
 /******/ 	
 /************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(109);
-/******/ 	module.exports = __webpack_exports__;
-/******/ 	
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+(() => {
+"use strict";
+__nccwpck_require__.r(__webpack_exports__);
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(438);
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _actions_io__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(657);
+/* harmony import */ var _actions_io__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_io__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(313);
+/* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nccwpck_require__.n(_actions_exec__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(147);
+/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nccwpck_require__.n(fs__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var os__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(37);
+/* harmony import */ var os__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__nccwpck_require__.n(os__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(17);
+/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__nccwpck_require__.n(path__WEBPACK_IMPORTED_MODULE_5__);
+/**
+ * Copyright (c) 2021, Oracle and/or its affiliates.
+ * Licensed under the Universal Permissive License v1.0 as shown at https://oss.oracle.com/licenses/upl.
+ */
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+
+
+
+/**
+ * Install the OCI CLI (if ncessary) and then run the command specified by
+ * the user workflow. By default, the action suppresses/masks the command
+ * and output from the GitHub console and logs to avoid leaking confidential
+ * data.
+ *
+ */
+function runOciCliCommand() {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!fs__WEBPACK_IMPORTED_MODULE_3__.existsSync(path__WEBPACK_IMPORTED_MODULE_5__.join(os__WEBPACK_IMPORTED_MODULE_4__.homedir(), '.oci-cli-installed'))) {
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.startGroup('Installing Oracle Cloud Infrastructure CLI');
+            const cli = yield _actions_exec__WEBPACK_IMPORTED_MODULE_2__.getExecOutput('python -m pip install oci-cli');
+            if (cli && cli.exitCode == 0) {
+                fs__WEBPACK_IMPORTED_MODULE_3__.writeFileSync(path__WEBPACK_IMPORTED_MODULE_5__.join(os__WEBPACK_IMPORTED_MODULE_4__.homedir(), '.oci-cli-installed'), 'success');
+            }
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.endGroup();
+        }
+        const cliBin = yield _actions_io__WEBPACK_IMPORTED_MODULE_1__.which('oci', true);
+        const cliArgs = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('command', { required: true })
+            .replace(/^(oci\s)/, '')
+            .trim();
+        const jmesPath = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('query')
+            ? `--query "${_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('query').trim()}"`
+            : '';
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info('Executing Oracle Cloud Infrastructure CLI command');
+        const silent = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput('silent', { required: false });
+        const cliCommand = `${cliBin} ${jmesPath} ${cliArgs}`;
+        if (silent)
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.setSecret(cliCommand);
+        const cliResult = yield _actions_exec__WEBPACK_IMPORTED_MODULE_2__.getExecOutput(cliCommand, [], { silent: silent });
+        if (cliResult) {
+            const stdout = cliResult.stdout ? JSON.parse(cliResult.stdout) : {};
+            const stderr = cliResult.stderr ? JSON.stringify(cliResult.stderr) : '';
+            if (cliResult.exitCode == 0) {
+                const output = JSON.stringify(JSON.stringify(stdout));
+                if (silent && output)
+                    _actions_core__WEBPACK_IMPORTED_MODULE_0__.setSecret(output);
+                _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput('output', output);
+                if (Object.keys(stdout).length == 1) {
+                    const raw_output = stdout[0];
+                    if (silent && raw_output)
+                        _actions_core__WEBPACK_IMPORTED_MODULE_0__.setSecret(raw_output);
+                    _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput('raw_output', raw_output);
+                }
+            }
+            else {
+                _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(`Failed: ${JSON.stringify(stderr)}`);
+            }
+        }
+        else {
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed('Failed to execute OCI CLI command.');
+        }
+    });
+}
+/**
+ * Requires OCI CLI environment variables to be set
+ */
+runOciCliCommand().catch(e => {
+    if (e instanceof Error)
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(e.message);
+});
+
+})();
+
+module.exports = __webpack_exports__;
 /******/ })()
 ;
-//# sourceMappingURL=index.js.map
