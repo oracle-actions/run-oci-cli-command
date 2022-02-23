@@ -2,18 +2,13 @@
   "name": "@oracle-actions/run-oci-cli-command",
   "version": "1.0.0",
   "author": {
-    "name": "Oracle Cloud Infrastructure Developer Adoption and Experience Tools",
+    "name": "Oracle Cloud Infrastructure",
     "email": "oci-dax-tools_ww@oracle.com"
   },
   "description": "Run an Oracle Cloud Infrastructure (OCI) CLI command",
-  "main": "dist/index.js",
+  "main": "src/main.ts",
   "scripts": {
-    "prepare": "husky install",
-    "build": "tsc",
-    "format": "prettier --write **/*.ts",
-    "format-check": "prettier --check **/*.ts",
-    "package": "ncc build --source-map --license licenses.txt lib/main.js",
-    "all": "npm run build && npm run format && npm run package"
+    "build": "ncc build src/main.ts"
   },
   "repository": {
     "type": "git",
@@ -22,7 +17,7 @@
   "files": [
     "LICENSE.txt",
     "THIRD_PARTY_LICENSES.txt",
-    "lib/*"
+    "dist/*"
   ],
   "keywords": [
     "github",
@@ -42,18 +37,8 @@
     "@actions/tool-cache": "^1.7.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^13.2.1",
-    "@commitlint/config-conventional": "^13.2.0",
-    "@types/node": "^16.11.1",
-    "@vercel/ncc": "^0.31.1",
-    "cz-conventional-changelog": "^3.3.0",
-    "husky": "^7.0.2",
-    "prettier": "^2.4.1",
-    "typescript": "^4.4.4"
-  },
-  "config": {
-    "commitizen": {
-      "path": "cz-conventional-changelog"
-    }
+    "@types/node": "^17.0.16",
+    "@vercel/ncc": "^0.33.1",
+    "typescript": "^4.5.5"
   }
 }
