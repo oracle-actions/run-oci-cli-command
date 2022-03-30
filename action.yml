@@ -22,7 +22,7 @@ inputs:
       directly to the log. This may leak confidential information. We
       recomment keep this as false except for debugging purposes.
     required: false
-    default: true
+    default: 'True'
 outputs:
   output:
     description: Response output in JSON format
@@ -30,6 +30,9 @@ outputs:
     description: >-
       If the output of a given query is a single string value, this will return
       the string without surrounding quotes.
+branding:
+  icon: 'circle'
+  color: 'red'
 runs:
   using: 'node12'
   main: 'dist/index.js'
