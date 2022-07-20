@@ -70,7 +70,7 @@ jobs:
           jmespath: "data[?name=='my-compartment'].id"
 
       - name: Retrieve the display name and shape of the instances in my compartment
-        uses: oracle-actions/run-oci-cli-command@v1
+        uses: oracle-actions/run-oci-cli-command@v1.0
         id: find-my-instances-instances
         with:
           command: 'compute instance list --compartment-id ${{ steps.compartment-ocid.get-compartment-ocid.raw_output }}'
