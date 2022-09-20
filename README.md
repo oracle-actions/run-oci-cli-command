@@ -1,4 +1,4 @@
-# run-oci-cli-command v1.0
+# run-oci-cli-command
 
 This GitHub Action installs the OCI CLI and then runs the specified command. This action will automatically cache the OCI CLI install to speed up any subsequent steps that use this action.
 
@@ -55,14 +55,14 @@ jobs:
       OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
     steps:
       - name: Retrieve the OCID of a named compartment in tenancy
-        uses: oracle-actions/run-oci-cli-command@v1.0
+        uses: oracle-actions/run-oci-cli-command@v1.1
         id: find-compartment-id
         with:
           command: 'iam compartment list --compartment-id-in-subtree=true'
           query: "data[?name=='testing'].id"
 
       - name: Retrieve the display name and shape of the instances in my compartment
-        uses: oracle-actions/run-oci-cli-command@v1.0
+        uses: oracle-actions/run-oci-cli-command@v1.1
         id: find-instances
         with:
           command: 'compute instance list --compartment-id ${{ steps.find-compartment-id.outputs.raw_output }}'
