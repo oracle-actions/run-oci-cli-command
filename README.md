@@ -25,12 +25,12 @@ By default, the output(s) from the command are masked from the GitHub Actions lo
 
 * `silent`: (Optional; default: _true_) If set to _false_ the  action will   not mask or suppress the command or outputs from the logs or console.
 
-> **Note:** the output does not need to be visible in the log to be used as an > input by another task.
+> **Note:** the output does not need to be visible in the log to be used as an input by another task.
 
 ## Outputs
 
 * `output`: will contain the results of the command in JSON format.
-* `raw_output`: if the output of a given query is a single string value, this   will return the string without surrounding quotes.
+* `raw_output`: if the output of a given query is a single string value, `raw_output` will return the string without surrounding quotes.
 
 > **Note:** filtering the `output` or `raw_output` by piping it through another tool like `jq` may result in the filtered output being visible in the job logs. We recommend using the `query` parameter instead.
 
@@ -40,7 +40,7 @@ The following example lists all compute instances found in the `testing` compart
 
 To change the name of the compartment, modifying the `query` parameter of the `find-compartment-id` step.
 
-To change which fields are returned, modify the `query` parameter of the `find-instasnces` step.
+To change which fields are returned, modify the `query` parameter of the `find-instances` step.
 
 ```yaml
 jobs:
@@ -55,14 +55,14 @@ jobs:
       OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
     steps:
       - name: Retrieve the OCID of a named compartment in tenancy
-        uses: oracle-actions/run-oci-cli-command@v1.1
+        uses: oracle-actions/run-oci-cli-command@v1.1.1
         id: find-compartment-id
         with:
           command: 'iam compartment list --compartment-id-in-subtree=true'
           query: "data[?name=='testing'].id"
 
       - name: Retrieve the display name and shape of the instances in my compartment
-        uses: oracle-actions/run-oci-cli-command@v1.1
+        uses: oracle-actions/run-oci-cli-command@v1.1.1
         id: find-instances
         with:
           command: 'compute instance list --compartment-id ${{ steps.find-compartment-id.outputs.raw_output }}'
@@ -70,27 +70,24 @@ jobs:
 
       - name: List the display name and shape of the instances in my compartment
         run: |
-          echo ${{ steps.find-my-compartment-instances.outputs.output }} | jq .
+          echo ${{ steps.find-instances.outputs.output }} | jq .
 ```
 
  Consult the [JMESPath documentation][4] for details on how to create more complex queries and result formatting and [`action.yml`](./action.yml) for more detail on how to configure this action..
 
 ## Contributing
 
-We welcome contributions from the community. Before submitting a pull
-request, please [review our contribution guide](./CONTRIBUTING.md).
+We welcome contributions from the community. Before submitting a pull request, please [review our contribution guide](./CONTRIBUTING.md).
 
 ## Security
 
-Please consult the [security guide](./SECURITY.md) for our responsible security
-vulnerability disclosure process.
+Please consult the [security guide](./SECURITY.md) for our responsible security vulnerability disclosure process.
 
 ## License
 
-Copyright (c) 2021, 2022, Oracle and/or its affiliates.
+Copyright (c) 2021, 2023, Oracle and/or its affiliates.
 
-Released under the Universal Permissive License v1.0 as shown at
-<https://oss.oracle.com/licenses/upl/>.
+Released under the Universal Permissive License v1.0 as shown at <https://oss.oracle.com/licenses/upl/>.
 
 [1]: https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/clienvironmentvariables.htm
 [2]: https://docs.github.com/en/actions/learn-github-actions/environment-variables
