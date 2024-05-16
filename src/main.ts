@@ -1,15 +1,15 @@
 /**
- * Copyright (c) 2021, Oracle and/or its affiliates.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates.
  * Licensed under the Universal Permissive License v1.0 as shown at https://oss.oracle.com/licenses/upl.
  */
 
-import * as core from '@actions/core';
-import * as io from '@actions/io';
-import * as exec from '@actions/exec';
+import * as core from '@actions/core'
+import * as io from '@actions/io'
+import * as exec from '@actions/exec'
 
-import * as fs from 'fs';
-import * as os from 'os';
-import * as path from 'path';
+import * as fs from 'fs'
+import * as os from 'os'
+import * as path from 'path'
 
 /**
  * Install the OCI CLI (if ncessary) and then run the command specified by
@@ -20,54 +20,49 @@ import * as path from 'path';
  */
 async function runOciCliCommand(): Promise<void> {
   if (!fs.existsSync(path.join(os.homedir(), '.oci-cli-installed'))) {
-    core.startGroup('Installing Oracle Cloud Infrastructure CLI');
-    const cli = await exec.getExecOutput('python -m pip install oci-cli');
+    core.startGroup('Installing Oracle Cloud Infrastructure CLI')
+    const cli = await exec.getExecOutput('python -m pip install oci-cli')
 
     if (cli && cli.exitCode == 0) {
-      fs.writeFileSync(
-        path.join(os.homedir(), '.oci-cli-installed'),
-        'success'
-      );
+      fs.writeFileSync(path.join(os.homedir(), '.oci-cli-installed'), 'success')
     }
-    core.endGroup();
+    core.endGroup()
   }
 
-  const cliBin = await io.which('oci', true);
+  const cliBin = await io.which('oci', true)
   const cliArgs = core
-    .getInput('command', {required: true})
+    .getInput('command', { required: true })
     .replace(/^(oci\s)/, '')
-    .trim();
-  const jmesPath = core.getInput('query')
-    ? `--query "${core.getInput('query').trim()}"`
-    : '';
-  core.info('Executing Oracle Cloud Infrastructure CLI command');
-  const silent = core.getBooleanInput('silent', {required: false});
+    .trim()
+  const jmesPath = core.getInput('query') ? `--query "${core.getInput('query').trim()}"` : ''
+  core.info('Executing Oracle Cloud Infrastructure CLI command')
+  const silent = core.getBooleanInput('silent', { required: false })
 
-  const cliCommand = `${cliBin} ${jmesPath} ${cliArgs}`;
-  if (silent) core.setSecret(cliCommand);
+  const cliCommand = `${cliBin} ${jmesPath} ${cliArgs}`
+  if (silent) core.setSecret(cliCommand)
 
-  const cliResult = await exec.getExecOutput(cliCommand, [], {silent: silent});
+  const cliResult = await exec.getExecOutput(cliCommand, [], { silent: silent })
 
   if (cliResult) {
-    const stdout = cliResult.stdout ? JSON.parse(cliResult.stdout) : {};
-    const stderr = cliResult.stderr ? JSON.stringify(cliResult.stderr) : '';
+    const stdout = cliResult.stdout ? JSON.parse(cliResult.stdout) : {}
+    const stderr = cliResult.stderr ? JSON.stringify(cliResult.stderr) : ''
 
     if (cliResult.exitCode == 0) {
-      const output = JSON.stringify(JSON.stringify(stdout));
+      const output = JSON.stringify(JSON.stringify(stdout))
 
-      if (silent && output) core.setSecret(output);
-      core.setOutput('output', output);
+      if (silent && output) core.setSecret(output)
+      core.setOutput('output', output)
 
       if (Object.keys(stdout).length == 1) {
-        const raw_output = stdout[0];
-        if (silent && raw_output) core.setSecret(raw_output);
-        core.setOutput('raw_output', raw_output);
+        const raw_output = stdout[0]
+        if (silent && raw_output) core.setSecret(raw_output)
+        core.setOutput('raw_output', raw_output)
       }
     } else {
-      core.setFailed(`Failed: ${JSON.stringify(stderr)}`);
+      core.setFailed(`Failed: ${JSON.stringify(stderr)}`)
     }
   } else {
-    core.setFailed('Failed to execute OCI CLI command.');
+    core.setFailed('Failed to execute OCI CLI command.')
   }
 }
 
@@ -75,5 +70,5 @@ async function runOciCliCommand(): Promise<void> {
  * Requires OCI CLI environment variables to be set
  */
 runOciCliCommand().catch(e => {
-  if (e instanceof Error) core.setFailed(e.message);
-});
+  if (e instanceof Error) core.setFailed(e.message)
+})

@@ -1,4 +1,4 @@
-# Copyright (c) 2021, 2022 Oracle and/or its affiliates.
+# Copyright (c) 2021, 2024 Oracle and/or its affiliates.
 # Licensed under the Universal Permissive License v1.0 as shown at https://oss.oracle.com/licenses/upl.
 ---
 name: Run an Oracle Cloud Infrastructure (OCI) CLI command
@@ -6,21 +6,18 @@ description: Run an Oracle Cloud Infrastructure (OCI) CLI command
 inputs:
   command:
     description: >-
-      The command and arguments to provide to the "oci" tool. Most commands
-      specify a service, followed by a resource type and then an action,
-      e.g. "iam user list --compartment-id <compartment-ocid>"
+      The command and arguments to provide to the "oci" tool. Most commands specify a service, followed by a resource
+      type and then an action, e.g. "iam user list --compartment-id <compartment-ocid>"
     required: true
   query:
     description: >-
-      (Optional) JMESPath query [http://jmespath.org/] to run on the response
-      JSON before output.
+      (Optional) JMESPath query [http://jmespath.org/] to run on the response JSON before output.
     required: false
     default: ''
   silent:
     description: >-
-      (Default: true) If set to 'False', will stream the output of the command
-      directly to the log. This may leak confidential information. We
-      recomment keep this as false except for debugging purposes.
+      (Default: true) If set to 'False', will stream the output of the command directly to the log. This may leak
+      confidential information. We recomment keep this as false except for debugging purposes.
     required: false
     default: 'True'
 outputs:
@@ -28,11 +25,10 @@ outputs:
     description: Response output in JSON format
   raw_output:
     description: >-
-      If the output of a given query is a single string value, this will return
-      the string without surrounding quotes.
+      If the output of a given query is a single string value, this will return the string without surrounding quotes.
 branding:
   icon: 'circle'
   color: 'red'
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/index.js'
