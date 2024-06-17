@@ -1,0 +1,39 @@
+name: Sanity test of run-oci-cli-command
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+
+  test-action:
+    name: OCI CLI GitHub Action Test
+    runs-on: ubuntu-latest
+    env:
+      OCI_CLI_USER: ${{ secrets.OCI_CLI_USER }}
+      OCI_CLI_TENANCY: ${{ secrets.OCI_CLI_TENANCY }}
+      OCI_CLI_FINGERPRINT: ${{ secrets.OCI_CLI_FINGERPRINT }}
+      OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
+      OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
+
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Get object storage namespace
+        id: test-action-get-os-ns
+        uses: ./
+        with:
+          command: os ns get
+
+      - name: Output object storage namespace
+        id: output-os-ns
+        run: echo "${{ steps.test-action-get-os-ns.outputs.output }}"
