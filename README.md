@@ -34,12 +34,14 @@ purposes only:
 
 ## Outputs
 
-- `output`: will contain the results of the command in JSON format.
+- `output`: will contain the results of the command.
 - `raw_output`: if the output of a given query is a single string value, `raw_output` will return the string without
   surrounding quotes.
 
 > **Note:** filtering the `output` or `raw_output` by piping it through another tool like `jq` may result in the
-> filtered output being visible in the job logs. We recommend using the `query` parameter instead.
+> filtered output being visible in the job logs. We recommend using the `query` parameter whenever possible.
+
+If the result of the command is not valid JSON, it will not be visible unless `silent` is set to _false_.
 
 ## Sample workflow
 
@@ -63,14 +65,14 @@ jobs:
       OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
     steps:
       - name: Retrieve the OCID of a named compartment in tenancy
-        uses: oracle-actions/run-oci-cli-command@v1.2.0
+        uses: oracle-actions/run-oci-cli-command@v1.3.0
         id: find-compartment-id
         with:
           command: 'iam compartment list --compartment-id-in-subtree=true'
           query: "data[?name=='testing'].id"
 
       - name: Retrieve the display name and shape of the instances in my compartment
-        uses: oracle-actions/run-oci-cli-command@v1.2.0
+        uses: oracle-actions/run-oci-cli-command@v1.3.0
         id: find-instances
         with:
           command: 'compute instance list --compartment-id ${{ steps.find-compartment-id.outputs.raw_output }}'

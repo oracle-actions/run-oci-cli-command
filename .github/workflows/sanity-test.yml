@@ -12,9 +12,8 @@ permissions:
   contents: read
 
 jobs:
-
   test-action:
-    name: OCI CLI GitHub Action Test
+    name: Sanity test run-oci-cli-command action
     runs-on: ubuntu-latest
     env:
       OCI_CLI_USER: ${{ secrets.OCI_CLI_USER }}
@@ -37,3 +36,10 @@ jobs:
       - name: Output object storage namespace
         id: output-os-ns
         run: echo "${{ steps.test-action-get-os-ns.outputs.output }}"
+
+      - name: Test non-JSON output
+        id: test-non-json-output
+        uses: ./
+        with:
+          command: --output=table iam region list
+          silent: false
