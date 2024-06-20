@@ -3959,6 +3959,19 @@ const fs = __importStar(__nccwpck_require__(147));
 const os = __importStar(__nccwpck_require__(37));
 const path = __importStar(__nccwpck_require__(17));
 /**
+ * Test if the content of a variable has a valid JSON structure
+ */
+function isJson(item) {
+    let value = typeof item !== 'string' ? JSON.stringify(item) : item;
+    try {
+        value = JSON.parse(value);
+    }
+    catch (e) {
+        return false;
+    }
+    return typeof value === 'object' && value !== null;
+}
+/**
  * Install the OCI CLI (if ncessary) and then run the command specified by
  * the user workflow. By default, the action suppresses/masks the command
  * and output from the GitHub console and logs to avoid leaking confidential
@@ -3986,27 +3999,31 @@ async function runOciCliCommand() {
     if (silent)
         core.setSecret(cliCommand);
     const cliResult = await exec.getExecOutput(cliCommand, [], { silent: silent });
-    if (cliResult) {
-        const stdout = cliResult.stdout ? JSON.parse(cliResult.stdout) : {};
-        const stderr = cliResult.stderr ? JSON.stringify(cliResult.stderr) : '';
-        if (cliResult.exitCode == 0) {
-            const output = JSON.stringify(JSON.stringify(stdout));
-            if (silent && output)
-                core.setSecret(output);
-            core.setOutput('output', output);
-            if (Object.keys(stdout).length == 1) {
-                const raw_output = stdout[0];
-                if (silent && raw_output)
-                    core.setSecret(raw_output);
-                core.setOutput('raw_output', raw_output);
-            }
+    let stdout = {};
+    let output = '';
+    let raw_output = '';
+    if (cliResult && cliResult.exitCode == 0) {
+        if (cliResult.stdout && !isJson(cliResult.stdout)) {
+            output = cliResult.stdout;
+            raw_output = cliResult.stdout;
         }
         else {
-            core.setFailed(`Failed: ${JSON.stringify(stderr)}`);
+            stdout = JSON.parse(cliResult.stdout);
+            output = JSON.stringify(JSON.stringify(stdout));
+            if (Object.keys(stdout).length == 1) {
+                raw_output = Object.keys(stdout)[0];
+            }
         }
+        if (silent && output)
+            core.setSecret(output);
+        core.setOutput('output', output);
+        if (silent && raw_output)
+            core.setSecret(raw_output);
+        core.setOutput('raw_output', raw_output);
     }
     else {
-        core.setFailed('Failed to execute OCI CLI command.');
+        const stderr = cliResult.stderr ? JSON.stringify(cliResult.stderr) : '';
+        core.setFailed(`Failed: ${JSON.stringify(stderr)}`);
     }
 }
 /**
