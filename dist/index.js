@@ -3952,6 +3952,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.runOciCliCommand = void 0;
 const core = __importStar(__nccwpck_require__(186));
 const io = __importStar(__nccwpck_require__(436));
 const exec = __importStar(__nccwpck_require__(514));
@@ -3999,7 +4000,6 @@ async function runOciCliCommand() {
     if (silent)
         core.setSecret(cliCommand);
     const cliResult = await exec.getExecOutput(cliCommand, [], { silent: silent });
-    let stdout = {};
     let output = '';
     let raw_output = '';
     if (cliResult && cliResult.exitCode == 0) {
@@ -4008,10 +4008,10 @@ async function runOciCliCommand() {
             raw_output = cliResult.stdout;
         }
         else {
-            stdout = JSON.parse(cliResult.stdout);
+            const stdout = JSON.parse(cliResult.stdout);
             output = JSON.stringify(JSON.stringify(stdout));
             if (Object.keys(stdout).length == 1) {
-                raw_output = Object.keys(stdout)[0];
+                raw_output = String(Object.values(stdout)[0]);
             }
         }
         if (silent && output)
@@ -4026,13 +4026,7 @@ async function runOciCliCommand() {
         core.setFailed(`Failed: ${JSON.stringify(stderr)}`);
     }
 }
-/**
- * Requires OCI CLI environment variables to be set
- */
-runOciCliCommand().catch(e => {
-    if (e instanceof Error)
-        core.setFailed(e.message);
-});
+exports.runOciCliCommand = runOciCliCommand;
 
 
 /***/ }),
@@ -4187,13 +4181,23 @@ module.exports = require("util");
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
 /******/ 	
 /************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(399);
-/******/ 	module.exports = __webpack_exports__;
-/******/ 	
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+(() => {
+"use strict";
+var exports = __webpack_exports__;
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+/* Copyright (c) 2024, Oracle and/or its affiliates.
+ * Licensed under the Universal Permissive License v1.0 as shown at https://oss.oracle.com/licenses/upl.
+ */
+const main_1 = __nccwpck_require__(399);
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
+(0, main_1.runOciCliCommand)();
+
+})();
+
+module.exports = __webpack_exports__;
 /******/ })()
 ;
 //# sourceMappingURL=index.js.map

@@ -23,19 +23,21 @@ jobs:
       OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
 
     steps:
-      - name: Checkout
-        id: checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Get object storage namespace
         id: test-action-get-os-ns
         uses: ./
         with:
-          command: os ns get
+          command: 'iam compartment list --compartment-id-in-subtree=true'
+          query: "data[?name=='github-actions'].id"
+          silent: false
 
-      - name: Output object storage namespace
-        id: output-os-ns
-        run: echo "${{ steps.test-action-get-os-ns.outputs.output }}"
+      - name: Echo object storage namespace
+        id: echo-os-ns-get
+        run: |
+          echo "Output: ${{ steps.test-action-get-os-ns.outputs.output}}"
+          echo "Raw output: ${{ steps.test-action-get-os-ns.outputs.raw_output}}"
 
       - name: Test non-JSON output
         id: test-non-json-output
