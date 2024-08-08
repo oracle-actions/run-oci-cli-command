@@ -1,12 +1,29 @@
 {
   "name": "@oracle-actions/run-oci-cli-command",
-  "version": "1.3.0",
+  "description": "Run an Oracle Cloud Infrastructure (OCI) CLI command",
+  "version": "1.3.1",
   "author": {
     "name": "Oracle Cloud Infrastructure",
     "email": "oci-dax-tools_ww@oracle.com"
   },
-  "description": "Run an Oracle Cloud Infrastructure (OCI) CLI command",
-  "main": "src/main.ts",
+  "private": true,
+  "homepage": "https://github.com/oracle-actions/run-oci-cli-command#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oracle-actions/run-oci-cli-command.git"
+  },
+  "bugs": {
+    "url": "https://github.com/oracle-actions/run-oci-cli-command/issues"
+  },
+  "keywords": [
+    "github",
+    "actions",
+    "oracle-cloud",
+    "oracle-cloud-infrastructure"
+  ],
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "engines": {
     "node": ">=20"
   },
@@ -15,29 +32,15 @@
     "format:write": "npx prettier --write .",
     "format:check": "npx prettier --check .",
     "lint": "npx eslint . -c ./.github/linters/.eslintrc.yml",
-    "package": "npx ncc build src/main.ts -o dist --source-map --license LICENSE.txt",
+    "package": "npx ncc build src/index.ts -o dist --source-map --license LICENSE.txt",
     "all": "npm run format:write && npm run lint && npm run package"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/oracle-actions/run-oci-cli-command.git"
   },
   "files": [
     "LICENSE.txt",
     "THIRD_PARTY_LICENSES.txt",
     "dist/*"
   ],
-  "keywords": [
-    "github",
-    "actions",
-    "oracle-cloud",
-    "oracle-cloud-infrastructure"
-  ],
   "license": "UPL-1.0",
-  "bugs": {
-    "url": "https://github.com/oracle-actions/run-oci-cli-command/issues"
-  },
-  "homepage": "https://github.com/oracle-actions/run-oci-cli-command#readme",
   "dependencies": {
     "@actions/core": "^1.10.1",
     "@actions/exec": "^1.1.1",

@@ -32,7 +32,7 @@ function isJson(item: string): boolean {
  * data.
  *
  */
-async function runOciCliCommand(): Promise<void> {
+export async function runOciCliCommand(): Promise<void> {
   if (!fs.existsSync(path.join(os.homedir(), '.oci-cli-installed'))) {
     core.startGroup('Installing Oracle Cloud Infrastructure CLI')
     const cli = await exec.getExecOutput('python -m pip install oci-cli')
@@ -56,7 +56,6 @@ async function runOciCliCommand(): Promise<void> {
   if (silent) core.setSecret(cliCommand)
 
   const cliResult = await exec.getExecOutput(cliCommand, [], { silent: silent })
-  let stdout = {}
   let output = ''
   let raw_output = ''
 
@@ -65,10 +64,10 @@ async function runOciCliCommand(): Promise<void> {
       output = cliResult.stdout
       raw_output = cliResult.stdout
     } else {
-      stdout = JSON.parse(cliResult.stdout)
+      const stdout = JSON.parse(cliResult.stdout)
       output = JSON.stringify(JSON.stringify(stdout))
       if (Object.keys(stdout).length == 1) {
-        raw_output = Object.keys(stdout)[0]
+        raw_output = String(Object.values(stdout)[0])
       }
     }
 
@@ -82,10 +81,3 @@ async function runOciCliCommand(): Promise<void> {
     core.setFailed(`Failed: ${JSON.stringify(stderr)}`)
   }
 }
-
-/**
- * Requires OCI CLI environment variables to be set
- */
-runOciCliCommand().catch(e => {
-  if (e instanceof Error) core.setFailed(e.message)
-})
