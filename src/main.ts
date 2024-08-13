@@ -18,7 +18,7 @@ function isJson(item: string): boolean {
   let value = typeof item !== 'string' ? JSON.stringify(item) : item
   try {
     value = JSON.parse(value)
-  } catch (e) {
+  } catch {
     return false
   }
 

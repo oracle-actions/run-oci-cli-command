@@ -3952,7 +3952,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.runOciCliCommand = void 0;
+exports.runOciCliCommand = runOciCliCommand;
 const core = __importStar(__nccwpck_require__(186));
 const io = __importStar(__nccwpck_require__(436));
 const exec = __importStar(__nccwpck_require__(514));
@@ -3967,7 +3967,7 @@ function isJson(item) {
     try {
         value = JSON.parse(value);
     }
-    catch (e) {
+    catch {
         return false;
     }
     return typeof value === 'object' && value !== null;
@@ -4026,7 +4026,6 @@ async function runOciCliCommand() {
         core.setFailed(`Failed: ${JSON.stringify(stderr)}`);
     }
 }
-exports.runOciCliCommand = runOciCliCommand;
 
 
 /***/ }),
