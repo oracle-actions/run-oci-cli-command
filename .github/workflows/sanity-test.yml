@@ -25,19 +25,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Get object storage namespace
-        id: test-action-get-os-ns
+      - name: Get IAM region list
+        id: test-action-iam-region-list
         uses: ./
         with:
-          command: 'iam compartment list --compartment-id-in-subtree=true'
-          query: "data[?name=='github-actions'].id"
+          command: iam region list
           silent: false
 
-      - name: Echo object storage namespace
+      - name: Echo IAM region list
         id: echo-os-ns-get
         run: |
-          echo "Output: ${{ steps.test-action-get-os-ns.outputs.output}}"
-          echo "Raw output: ${{ steps.test-action-get-os-ns.outputs.raw_output}}"
+          echo "Output: ${{ steps.test-action-iam-region-list.outputs.output}}"
+          echo "Raw output: ${{ steps.test-action-iam-region-list.outputs.raw_output}}"
 
       - name: Test non-JSON output
         id: test-non-json-output
