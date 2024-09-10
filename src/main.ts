@@ -60,15 +60,15 @@ export async function runOciCliCommand(): Promise<void> {
   let raw_output = ''
 
   if (cliResult && cliResult.exitCode == 0) {
-    if (cliResult.stdout && !isJson(cliResult.stdout)) {
-      output = cliResult.stdout
-      raw_output = cliResult.stdout
-    } else {
+    if (cliResult.stdout && isJson(cliResult.stdout)) {
       const stdout = JSON.parse(cliResult.stdout)
       output = JSON.stringify(JSON.stringify(stdout))
       if (Object.keys(stdout).length == 1) {
         raw_output = String(Object.values(stdout)[0])
       }
+    } else {
+      output = cliResult.stdout
+      raw_output = cliResult.stdout
     }
 
     if (silent && output) core.setSecret(output)
@@ -77,7 +77,12 @@ export async function runOciCliCommand(): Promise<void> {
     if (silent && raw_output) core.setSecret(raw_output)
     core.setOutput('raw_output', raw_output)
   } else {
-    const stderr = cliResult.stderr ? JSON.stringify(cliResult.stderr) : ''
-    core.setFailed(`Failed: ${JSON.stringify(stderr)}`)
+    if (cliResult.stderr && isJson(cliResult.stderr)) {
+      const stderr = JSON.parse(cliResult.stderr)
+      output = JSON.stringify(JSON.stringify(stderr))
+    } else {
+      output = cliResult.stderr
+    }
+    core.setFailed(`Failed: ${output}`)
   }
 }
