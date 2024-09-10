@@ -25,6 +25,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check for existing OCI CLI config
+        run: |
+          ls -la $HOME/.oci/
+          cat $HOME/.oci/config
+
       - name: Get IAM region list
         id: test-action-iam-region-list
         uses: ./
