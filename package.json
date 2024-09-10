@@ -1,7 +1,7 @@
 {
   "name": "@oracle-actions/run-oci-cli-command",
   "description": "Run an Oracle Cloud Infrastructure (OCI) CLI command",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "author": {
     "name": "Oracle Cloud Infrastructure",
     "email": "oci-dax-tools_ww@oracle.com"

@@ -25,10 +25,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check for OCI CLI environment variables
-        run: |
-          env | grep OCI_CLI
-
       - name: Get IAM region list
         id: test-action-iam-region-list
         uses: ./
