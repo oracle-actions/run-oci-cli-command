@@ -65,14 +65,14 @@ jobs:
       OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
     steps:
       - name: Retrieve the OCID of a named compartment in tenancy
-        uses: oracle-actions/run-oci-cli-command@v1.3.1
+        uses: oracle-actions/run-oci-cli-command@v1.3.2
         id: find-compartment-id
         with:
           command: 'iam compartment list --compartment-id-in-subtree=true'
           query: "data[?name=='testing'].id"
 
       - name: Retrieve the display name and shape of the instances in my compartment
-        uses: oracle-actions/run-oci-cli-command@v1.3.1
+        uses: oracle-actions/run-oci-cli-command@v1.3.2
         id: find-instances
         with:
           command: 'compute instance list --compartment-id ${{ steps.find-compartment-id.outputs.raw_output }}'
